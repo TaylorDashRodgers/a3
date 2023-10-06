@@ -25,9 +25,6 @@ public:
 
     void drawHero( glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx );
 
-    void moveForward();
-    void moveBackward();
-
     /// \desc simulates the plane flying forward by rotating the propeller clockwise
     void flyForward();
     /// \desc simulates the plane flying backward by rotating the propeller counter-clockwise
@@ -53,6 +50,14 @@ private:
 
     /// \desc angle to rotate our plane at
     GLfloat _rotatePlaneAngle;
+
+    glm::vec3 _colorHead;
+    glm::vec3 _scaleHead;
+    glm::vec3 _transHead;
+
+    glm::vec3 _colorLegs;
+    glm::vec3 _scaleLegs;
+    glm::vec3 _transLegs;
 
     /// \desc color the plane's body
     glm::vec3 _colorBody;
@@ -86,8 +91,10 @@ private:
     const GLfloat _2PI = glm::two_pi<float>();
     const GLfloat _PI_OVER_2 = glm::half_pi<float>();
 
+    void _drawHeroHead(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
     void _drawHeroBody(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
-    void _drawHeroArm(bool isLeftArm, glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
+    void _drawHeroLegs(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
+    void _drawHeroArm(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
 
     /// \desc draws just the plane's body
     /// \param modelMtx existing model matrix to apply to plane

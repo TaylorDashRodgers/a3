@@ -287,7 +287,7 @@ void A3Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     // rotate the plane with our camera phi direction
     modelMtx = glm::rotate(modelMtx, _pFreeCam->getPhi(), CSCI441::X_AXIS );
     // draw our plane now
-    _pPlane->drawPlane(modelMtx, viewMtx, projMtx );
+    _pPlane->drawHero(modelMtx, viewMtx, projMtx );
     //// END DRAWING THE PLANE ////
 }
 

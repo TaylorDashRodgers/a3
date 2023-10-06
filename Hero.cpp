@@ -16,9 +16,17 @@ Hero::Hero(GLuint shaderProgramHandle, GLint mvpMtxUniformLocation, GLint normal
 
     _rotatePlaneAngle = _PI / 2.0f;
 
+    _colorHead = glm::vec3( 0.0f,0.5451f,0.5451f );
+    _scaleHead = glm::vec3( 0.1f, 0.1f, 0.1f );
+    _transHead = glm::vec3( 0.0f, 0.13f, 0.0f );
+
     _colorBody = glm::vec3( 0.0f,0.5451f,0.5451f );
-    _scaleBody = glm::vec3( 1.0f, 3.0f, 1.0f );
-    _transBody = glm::vec3( 0.0f, 0.1f, 0.0f );
+    _scaleBody = glm::vec3( 1.0f, 2.5f, 1.0f );
+    _transBody = glm::vec3( 0.0f, -0.04f, 0.0f );
+
+    _colorLegs = glm::vec3( 0.2f,0.2f,0.2f );
+    _scaleLegs = glm::vec3( 1.1f, 2.0f, 1.1f );
+    _transLegs = glm::vec3( 0.0f, -0.12f, 0.0f );
 
     _colorArm = glm::vec3( 0.8f, 0.8f, 0.8f );
     _scaleArm = glm::vec3(0.5f, 1.0f, 1.0f );
@@ -38,15 +46,21 @@ Hero::Hero(GLuint shaderProgramHandle, GLint mvpMtxUniformLocation, GLint normal
 void Hero::drawPlane(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) {
     modelMtx = glm::rotate( modelMtx, -_rotatePlaneAngle, CSCI441::Y_AXIS );
     modelMtx = glm::rotate( modelMtx, _rotatePlaneAngle, CSCI441::Z_AXIS );
-//    _drawPlaneBody(modelMtx, viewMtx, projMtx);        // the body of our plane
     _drawHeroBody(modelMtx, viewMtx, projMtx);
-//    _drawPlaneWing(true, modelMtx, viewMtx, projMtx);  // the left wing
-//    _drawPlaneWing(false, modelMtx, viewMtx, projMtx); // the right wing
-    _drawHeroArm(true, modelMtx, viewMtx, projMtx); // the left arm
+//    _drawHeroArm(true, modelMtx, viewMtx, projMtx); // the left arm
 //    _drawHeroArm(false, modelMtx, viewMtx, projMtx); // the right arm
     _drawPlaneNose(modelMtx, viewMtx, projMtx);        // the nose
     _drawPlanePropeller(modelMtx, viewMtx, projMtx);   // the propeller
     _drawPlaneTail(modelMtx, viewMtx, projMtx);        // the tail
+}
+
+void Hero::drawHero(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) {
+    modelMtx = glm::rotate( modelMtx, -_rotatePlaneAngle, CSCI441::Y_AXIS );
+    modelMtx = glm::rotate( modelMtx, _rotatePlaneAngle, CSCI441::Z_AXIS );
+    _drawHeroBody(modelMtx, viewMtx, projMtx);
+    _drawHeroArm(modelMtx, viewMtx, projMtx);
+    _drawHeroLegs(modelMtx, viewMtx, projMtx);
+    _drawHeroHead(modelMtx, viewMtx, projMtx);
 }
 
 void Hero::flyForward() {
@@ -59,41 +73,41 @@ void Hero::flyBackward() {
     if( _propAngle < 0.0f ) _propAngle += _2PI;
 }
 
-//void Hero::_drawPlaneBody(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
-//    modelMtx = glm::scale( modelMtx, _scaleBody );
-//
-//    _computeAndSendMatrixUniforms(modelMtx, viewMtx, projMtx);
-//
-//    glProgramUniform3fv(_shaderProgramHandle, _shaderProgramUniformLocations.materialColor, 1, &_colorBody[0]);
-//
-//    CSCI441::drawSolidCube( 0.1f );
-//}
+void Hero::_drawHeroHead(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
+    glm::mat4 modelMtx1 = glm::translate( modelMtx, _transHead );
+    modelMtx1 = glm::scale( modelMtx1, _scaleHead );
+
+    _computeAndSendMatrixUniforms(modelMtx1, viewMtx, projMtx);
+
+    glProgramUniform3fv(_shaderProgramHandle, _shaderProgramUniformLocations.materialColor, 1, &_colorHead[0]);
+
+    CSCI441::drawSolidSphere( 0.8f, 10, 10);
+}
 
 void Hero::_drawHeroBody(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
     glm::mat4 modelMtx1 = glm::translate( modelMtx, _transBody );
-    modelMtx = glm::scale( modelMtx, _scaleBody );
+    modelMtx1 = glm::scale( modelMtx1, _scaleBody );
 
-    _computeAndSendMatrixUniforms(modelMtx, viewMtx, projMtx);
+    _computeAndSendMatrixUniforms(modelMtx1, viewMtx, projMtx);
 
     glProgramUniform3fv(_shaderProgramHandle, _shaderProgramUniformLocations.materialColor, 1, &_colorBody[0]);
 
     CSCI441::drawSolidCube( 0.1f );
 }
 
-//void Hero::_drawPlaneWing(bool isLeftWing, glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
-//    modelMtx = glm::scale( modelMtx, _scaleArm );
-//    modelMtx = glm::rotate( modelMtx, (isLeftWing ? -1.f : 1.f) * _rotateWingAngle, CSCI441::X_AXIS );
-//
-//    _computeAndSendMatrixUniforms(modelMtx, viewMtx, projMtx);
-//
-//    glProgramUniform3fv(_shaderProgramHandle, _shaderProgramUniformLocations.materialColor, 1, &_colorWing[0]);
-//
-//    CSCI441::drawSolidCone( 0.05f, 0.2f, 16, 16 );
-//}
+void Hero::_drawHeroLegs(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
+    glm::mat4 modelMtx1 = glm::translate( modelMtx, _transLegs );
+    modelMtx1 = glm::scale( modelMtx1, _scaleLegs );
 
-void Hero::_drawHeroArm(bool isLeftWing, glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
+    _computeAndSendMatrixUniforms(modelMtx1, viewMtx, projMtx);
+
+    glProgramUniform3fv(_shaderProgramHandle, _shaderProgramUniformLocations.materialColor, 1, &_colorLegs[0]);
+
+    CSCI441::drawSolidCube( 0.1f );
+}
+
+void Hero::_drawHeroArm(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
     modelMtx = glm::scale(modelMtx, _scaleArm );
-    modelMtx = glm::rotate( modelMtx, (isLeftWing ? -1.f : 1.f) * _rotateWingAngle, CSCI441::X_AXIS );
 
     _computeAndSendMatrixUniforms(modelMtx, viewMtx, projMtx);
 
