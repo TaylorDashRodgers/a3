@@ -72,13 +72,13 @@ private:
 
     /// \desc the size of the world (controls the ground size and locations of buildings)
     static constexpr GLfloat WORLD_SIZE = 55.0f;
-//    /// \desc VAO for our ground
-//    GLuint _groundVAO;
-//    /// \desc the number of points that make up our ground object
-//    GLsizei _numGroundPoints;
+    /// \desc VAO for our ground
+    GLuint _groundVAO;
+    /// \desc the number of points that make up our ground object
+    GLsizei _numGroundPoints;
 
-//    /// \desc creates the ground VAO
-//    void _createGroundBuffers();
+    /// \desc creates the ground VAO
+    void _createGroundBuffers();
 
     /// \desc smart container to store information specific to each building we wish to draw
     struct BuildingData {
@@ -89,6 +89,19 @@ private:
     };
     /// \desc information list of all the buildings to draw
     std::vector<BuildingData> _buildings;
+
+    /**
+     * @brief VAO representing our ground plane grid
+     */
+    GLuint _gridVAO;
+    /**
+     * @brief tracks the number of vertices comprising the ground plane
+     */
+    GLuint _numGridPoints;
+    /**
+     * @brief color to draw the ground plane grid
+     */
+    glm::vec3 _gridColor;
 
     /// \desc generates building information to make up our scene
     void _generateEnvironment();
