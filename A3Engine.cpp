@@ -27,10 +27,6 @@ A3Engine::A3Engine()
 
     for(auto& _key : _keys) _key = GL_FALSE;
 
-    _gridVAO = 0;
-    _numGridPoints = 0;
-    _gridColor = glm::vec3(1.0f, 1.0f, 1.0f);
-
     _mousePosition = glm::vec2(MOUSE_UNINITIALIZED, MOUSE_UNINITIALIZED );
     _leftMouseButtonState = GLFW_RELEASE;
 }
@@ -197,7 +193,7 @@ void A3Engine::_generateEnvironment() {
                 glm::mat4 transToSpotMtx = glm::translate( glm::mat4(1.0), glm::vec3(i, 0.0f, j) );
 
                 // compute random height
-                GLdouble height = powf(getRand(), 2.5)*10 + 1;
+                GLdouble height = 2.0f;
                 // scale to building size
                 glm::mat4 scaleToHeightMtx = glm::scale( glm::mat4(1.0), glm::vec3(1, height, 1) );
 
@@ -208,32 +204,13 @@ void A3Engine::_generateEnvironment() {
                 glm::mat4 modelMatrix = transToHeight * scaleToHeightMtx * transToSpotMtx;
 
                 // compute random color
-                glm::vec3 color( getRand(), getRand(), getRand() );
+                glm::vec3 color( 0.4f, 0.4f, 0.4f );
                 // store building properties
                 BuildingData currentBuilding = {modelMatrix, color};
                 _buildings.emplace_back( currentBuilding );
             }
         }
     }
-
-    //******************************************************************
-    // draws a grid as our ground plane
-    // do not edit this next section
-    std::vector< glm::vec3 > points;
-    // draw horizontal lines
-    for(GLfloat i = LEFT_END_POINT; i <= RIGHT_END_POINT; i += GRID_SPACING_WIDTH) {
-        points.emplace_back( i, 0.0f, BOTTOM_END_POINT );
-        points.emplace_back( i, 0.0f, TOP_END_POINT );
-    }
-    // draw vertical lines
-    for(GLfloat j = BOTTOM_END_POINT; j <= TOP_END_POINT; j += GRID_SPACING_LENGTH) {
-        points.emplace_back( LEFT_END_POINT, 0.0f, j );
-        points.emplace_back( RIGHT_END_POINT, 0.0f, j );
-    }
-    _gridVAO = CSCI441::SimpleShader3::registerVertexArray(points, std::vector<glm::vec3>(points.size()));
-    _numGridPoints = points.size();
-    _gridColor = glm::vec3(1.0f, 1.0f, 1.0f);
-    //******************************************************************
 }
 
 void A3Engine::mSetupScene() {
@@ -285,7 +262,7 @@ void A3Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     glm::mat4 groundModelMtx = glm::scale( glm::mat4(1.0f), glm::vec3(WORLD_SIZE, 1.0f, WORLD_SIZE));
     _computeAndSendMatrixUniforms(groundModelMtx, viewMtx, projMtx);
 
-    glm::vec3 groundColor(0.3f, 0.8f, 0.2f);
+    glm::vec3 groundColor(0.9f, 0.9f, 0.9f);
     _lightingShaderProgram->setProgramUniform(_lightingShaderUniformLocations.materialColor, groundColor);
 
     glBindVertexArray(_groundVAO);
@@ -313,15 +290,6 @@ void A3Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     // draw our plane now
     _pPlane->drawPlane(modelMtx, viewMtx, projMtx );
     //// END DRAWING THE PLANE ////
-
-    // specify the color to draw the grid lines of our ground plane
-    CSCI441::SimpleShader3::setMaterialColor( _gridColor );
-    // as we'll learn, lighting only applies to triangles, so turn it off for lines
-    CSCI441::SimpleShader3::disableLighting();
-    // draw the grid
-    CSCI441::SimpleShader3::draw(GL_LINES, _gridVAO, _numGridPoints);
-    // turn lighting back on for future drawing
-    CSCI441::SimpleShader3::enableLighting();
 }
 
 void A3Engine::_updateScene() {

@@ -90,19 +90,6 @@ private:
     /// \desc information list of all the buildings to draw
     std::vector<BuildingData> _buildings;
 
-    /**
-     * @brief VAO representing our ground plane grid
-     */
-    GLuint _gridVAO;
-    /**
-     * @brief tracks the number of vertices comprising the ground plane
-     */
-    GLuint _numGridPoints;
-    /**
-     * @brief color to draw the ground plane grid
-     */
-    glm::vec3 _gridColor;
-
     /// \desc generates building information to make up our scene
     void _generateEnvironment();
 
