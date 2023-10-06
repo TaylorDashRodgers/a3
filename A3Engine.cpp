@@ -27,10 +27,6 @@ A3Engine::A3Engine()
 
     for(auto& _key : _keys) _key = GL_FALSE;
 
-    _gridVAO = 0;
-    _numGridPoints = 0;
-    _gridColor = glm::vec3(1.0f, 1.0f, 1.0f);
-
     _mousePosition = glm::vec2(MOUSE_UNINITIALIZED, MOUSE_UNINITIALIZED );
     _leftMouseButtonState = GLFW_RELEASE;
 }
@@ -129,47 +125,47 @@ void A3Engine::mSetupBuffers() {
                        _lightingShaderUniformLocations.normalMatrix,
                        _lightingShaderUniformLocations.materialColor);
 
-    _createGroundBuffers();
+//    _createGroundBuffers();
     _generateEnvironment();
 }
 
-void A3Engine::_createGroundBuffers() {
-    // TODO #8: expand our struct
-    struct Vertex {
-        GLfloat x, y, z;
-        GLfloat nx, ny, nz;
-    };
-
-    // TODO #9: add normal data
-    Vertex groundQuad[4] = {
-            {-1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f},
-            { 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f},
-            {-1.0f, 0.0f,  1.0f, 0.0f, 1.0f, 0.0f},
-            { 1.0f, 0.0f,  1.0f, 0.0f, 1.0f, 0.0f}
-    };
-
-    GLushort indices[4] = {0,1,2,3};
-
-    _numGroundPoints = 4;
-
-    glGenVertexArrays(1, &_groundVAO);
-    glBindVertexArray(_groundVAO);
-
-    GLuint vbods[2];       // 0 - VBO, 1 - IBO
-    glGenBuffers(2, vbods);
-    glBindBuffer(GL_ARRAY_BUFFER, vbods[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(groundQuad), groundQuad, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(_lightingShaderAttributeLocations.vPos);
-    glVertexAttribPointer(_lightingShaderAttributeLocations.vPos, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)nullptr);
-
-    // TODO #10: hook up vertex normal attribute
-    glEnableVertexAttribArray(_lightingShaderAttributeLocations.vertexNormal);
-    glVertexAttribPointer(_lightingShaderAttributeLocations.vertexNormal, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(GLfloat)));
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbods[1]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-}
+//void A3Engine::_createGroundBuffers() {
+//    // TODO #8: expand our struct
+//    struct Vertex {
+//        GLfloat x, y, z;
+//        GLfloat nx, ny, nz;
+//    };
+//
+//    // TODO #9: add normal data
+//    Vertex groundQuad[4] = {
+//            {-1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f},
+//            { 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f},
+//            {-1.0f, 0.0f,  1.0f, 0.0f, 1.0f, 0.0f},
+//            { 1.0f, 0.0f,  1.0f, 0.0f, 1.0f, 0.0f}
+//    };
+//
+//    GLushort indices[4] = {0,1,2,3};
+//
+//    _numGroundPoints = 4;
+//
+//    glGenVertexArrays(1, &_groundVAO);
+//    glBindVertexArray(_groundVAO);
+//
+//    GLuint vbods[2];       // 0 - VBO, 1 - IBO
+//    glGenBuffers(2, vbods);
+//    glBindBuffer(GL_ARRAY_BUFFER, vbods[0]);
+//    glBufferData(GL_ARRAY_BUFFER, sizeof(groundQuad), groundQuad, GL_STATIC_DRAW);
+//
+//    glEnableVertexAttribArray(_lightingShaderAttributeLocations.vPos);
+//    glVertexAttribPointer(_lightingShaderAttributeLocations.vPos, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)nullptr);
+//
+//    // TODO #10: hook up vertex normal attribute
+//    glEnableVertexAttribArray(_lightingShaderAttributeLocations.vertexNormal);
+//    glVertexAttribPointer(_lightingShaderAttributeLocations.vertexNormal, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(GLfloat)));
+//
+//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbods[1]);
+//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+//}
 
 void A3Engine::_generateEnvironment() {
     //******************************************************************
@@ -215,25 +211,6 @@ void A3Engine::_generateEnvironment() {
             }
         }
     }
-
-    //******************************************************************
-    // draws a grid as our ground plane
-    // do not edit this next section
-    std::vector< glm::vec3 > points;
-    // draw horizontal lines
-    for(GLfloat i = LEFT_END_POINT; i <= RIGHT_END_POINT; i += GRID_SPACING_WIDTH) {
-        points.emplace_back( i, 0.0f, BOTTOM_END_POINT );
-        points.emplace_back( i, 0.0f, TOP_END_POINT );
-    }
-    // draw vertical lines
-    for(GLfloat j = BOTTOM_END_POINT; j <= TOP_END_POINT; j += GRID_SPACING_LENGTH) {
-        points.emplace_back( LEFT_END_POINT, 0.0f, j );
-        points.emplace_back( RIGHT_END_POINT, 0.0f, j );
-    }
-    _gridVAO = CSCI441::SimpleShader3::registerVertexArray(points, std::vector<glm::vec3>(points.size()));
-    _numGridPoints = points.size();
-    _gridColor = glm::vec3(1.0f, 1.0f, 1.0f);
-    //******************************************************************
 }
 
 void A3Engine::mSetupScene() {
@@ -263,7 +240,7 @@ void A3Engine::mCleanupShaders() {
 void A3Engine::mCleanupBuffers() {
     fprintf( stdout, "[INFO]: ...deleting VAOs....\n" );
     CSCI441::deleteObjectVAOs();
-    glDeleteVertexArrays( 1, &_groundVAO );
+//    glDeleteVertexArrays( 1, &_groundVAO );
 
     fprintf( stdout, "[INFO]: ...deleting VBOs....\n" );
     CSCI441::deleteObjectVBOs();
@@ -288,8 +265,8 @@ void A3Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     glm::vec3 groundColor(0.3f, 0.8f, 0.2f);
     _lightingShaderProgram->setProgramUniform(_lightingShaderUniformLocations.materialColor, groundColor);
 
-    glBindVertexArray(_groundVAO);
-    glDrawElements(GL_TRIANGLE_STRIP, _numGroundPoints, GL_UNSIGNED_SHORT, (void*)0);
+//    glBindVertexArray(_groundVAO);
+//    glDrawElements(GL_TRIANGLE_STRIP, _numGroundPoints, GL_UNSIGNED_SHORT, (void*)0);
     //// END DRAWING THE GROUND PLANE ////
 
     //// BEGIN DRAWING THE BUILDINGS ////
@@ -313,15 +290,6 @@ void A3Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     // draw our plane now
     _pPlane->drawPlane(modelMtx, viewMtx, projMtx );
     //// END DRAWING THE PLANE ////
-
-    // specify the color to draw the grid lines of our ground plane
-    CSCI441::SimpleShader3::setMaterialColor( _gridColor );
-    // as we'll learn, lighting only applies to triangles, so turn it off for lines
-    CSCI441::SimpleShader3::disableLighting();
-    // draw the grid
-    CSCI441::SimpleShader3::draw(GL_LINES, _gridVAO, _numGridPoints);
-    // turn lighting back on for future drawing
-    CSCI441::SimpleShader3::enableLighting();
 }
 
 void A3Engine::_updateScene() {
