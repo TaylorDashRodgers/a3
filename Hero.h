@@ -23,6 +23,11 @@ public:
     /// for the MVP and Normal Matrices as well as the material diffuse color
     void drawPlane( glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx );
 
+    void drawHero( glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx );
+
+    void moveForward();
+    void moveBackward();
+
     /// \desc simulates the plane flying forward by rotating the propeller clockwise
     void flyForward();
     /// \desc simulates the plane flying backward by rotating the propeller counter-clockwise
@@ -53,11 +58,12 @@ private:
     glm::vec3 _colorBody;
     /// \desc amount to scale the plane's body by
     glm::vec3 _scaleBody;
+    glm::vec3 _transBody;
 
     /// \desc color the plane's wing
-    glm::vec3 _colorWing;
+    glm::vec3 _colorArm;
     /// \desc amount to scale the plane's wing by
-    glm::vec3 _scaleWing;
+    glm::vec3 _scaleArm;
     /// \desc amount to rotate the plane's wing by
     GLfloat _rotateWingAngle;
 
@@ -79,6 +85,9 @@ private:
     const GLfloat _PI = glm::pi<float>();
     const GLfloat _2PI = glm::two_pi<float>();
     const GLfloat _PI_OVER_2 = glm::half_pi<float>();
+
+    void _drawHeroBody(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
+    void _drawHeroArm(bool isLeftArm, glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
 
     /// \desc draws just the plane's body
     /// \param modelMtx existing model matrix to apply to plane

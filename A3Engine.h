@@ -2,6 +2,7 @@
 #define LAB05_LAB05_ENGINE_H
 
 #include <CSCI441/FreeCam.hpp>
+#include <CSCI441/ArcballCam.hpp>
 #include <CSCI441/OpenGLEngine.hpp>
 #include <CSCI441/ShaderProgram.hpp>
 
