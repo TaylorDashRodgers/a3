@@ -85,13 +85,13 @@ private:
 
     /// \desc smart container to store information specific to each building we wish to draw
     struct BuildingData {
-        /// \desc transformations to position and size the building
+        /// \desc transformations to position and size the tiles
         glm::mat4 modelMatrix;
-        /// \desc color to draw the building
+        /// \desc color to draw the tiles
         glm::vec3 color;
     };
-    /// \desc information list of all the buildings to draw
-    std::vector<BuildingData> _buildings;
+    /// \desc information list of all the tiles to draw
+    std::vector<BuildingData> _tiles;
 
     /// \desc generates building information to make up our scene
     void _generateEnvironment();

@@ -39,32 +39,13 @@ void A3Engine::handleKeyEvent(GLint key, GLint action) {
     if(key != GLFW_KEY_UNKNOWN)
         _keys[key] = ((action == GLFW_PRESS) || (action == GLFW_REPEAT));
 
-    if(action == GLFW_PRESS || action == GLFW_REPEAT ) {
+    if(action == GLFW_PRESS ) {
         switch( key ) {
             // quit!
             case GLFW_KEY_Q:
             case GLFW_KEY_ESCAPE:
                 setWindowShouldClose();
                 break;
-            case GLFW_KEY_W:
-                heroPosition.x += cos(_pHero->getBodyAngle());
-                heroPosition.z += -sin(_pHero->getBodyAngle());
-                _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) );
-                _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
-                _pArcballCam->recomputeOrientation();
-                break;
-            case GLFW_KEY_S:
-                heroPosition.x -= cos(_pHero->getBodyAngle());
-                heroPosition.z -= -sin(_pHero->getBodyAngle());
-                _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) );
-                _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
-                _pArcballCam->recomputeOrientation();
-                break;
-            case GLFW_KEY_D:
-                _pHero->turnRight();
-                break;
-            case GLFW_KEY_A:
-                _pHero->turnLeft();
 
             default: break; // suppress CLion warning
         }
@@ -235,7 +216,7 @@ void A3Engine::_generateEnvironment() {
                 glm::vec3 color( 0.4f, 0.4f, 0.4f );
                 // store building properties
                 BuildingData currentBuilding = {modelMatrix, color};
-                _buildings.emplace_back( currentBuilding );
+                _tiles.emplace_back(currentBuilding );
             }
         }
     }
@@ -243,7 +224,7 @@ void A3Engine::_generateEnvironment() {
 
 void A3Engine::mSetupScene() {
     _pArcballCam = new CSCI441::ArcballCam();
-    _pArcballCam->setRadius(15.0f);
+    _pArcballCam->setRadius(25.0f);
     _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) );
     _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
     _pArcballCam->setTheta(-M_PI / 7.0f );
@@ -300,7 +281,7 @@ void A3Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     //// END DRAWING THE GROUND PLANE ////
 
     //// BEGIN DRAWING THE BUILDINGS ////
-    for( const BuildingData& currentBuilding : _buildings ) {
+    for( const BuildingData& currentBuilding : _tiles ) {
         _computeAndSendMatrixUniforms(currentBuilding.modelMatrix, viewMtx, projMtx);
 
         _lightingShaderProgram->setProgramUniform(_lightingShaderUniformLocations.materialColor, currentBuilding.color);
@@ -311,48 +292,37 @@ void A3Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
 
     //// BEGIN DRAWING THE HERO ////
     glm::mat4 modelMtx(1.0f);
-    // we are going to cheat and use our look at point to place our plane so that it is always in view
+    // we are going to cheat and use our look at point to place our hero so that it is always in view
     modelMtx = glm::translate(modelMtx, _pArcballCam->getLookAtPoint() );
-    // rotate the plane with our camera theta direction (we need to rotate the opposite direction so that we always look at the back)
-//    modelMtx = glm::rotate(modelMtx, -_pArcballCam->getTheta(), CSCI441::Y_AXIS );
-    // rotate the plane with our camera phi direction
-//    modelMtx = glm::rotate(modelMtx, _pArcballCam->getPhi(), CSCI441::X_AXIS );
     // draw our hero now
     _pHero->drawHero(modelMtx, viewMtx, projMtx );
     //// END DRAWING THE HERO ////
 }
 
 void A3Engine::_updateScene() {
-//    // fly
-//    if( _keys[GLFW_KEY_SPACE] ) {
-//        // go backward if shift held down
-//        if( _keys[GLFW_KEY_LEFT_SHIFT] || _keys[GLFW_KEY_RIGHT_SHIFT] ) {
-//            _pArcballCam->moveBackward(_cameraSpeed.x);
-//            _pHero->flyBackward();
-//        }
-//        // go forward
-//        else {
-//            _pArcballCam->moveForward(_cameraSpeed.x);
-//            _pHero->flyForward();
-//        }
-//    }
-//    // turn right
-//    if( _keys[GLFW_KEY_D] || _keys[GLFW_KEY_RIGHT] ) {
-//        _pHero->turnRight();
-//    }
-//    // turn left
-//    if( _keys[GLFW_KEY_A] || _keys[GLFW_KEY_LEFT] ) {
-//        _pHero->turnLeft();
-//    }
-//    // move forward
-//    if( _keys[GLFW_KEY_W] || _keys[GLFW_KEY_UP] ) {
-//        heroPosition.x += 5.0f;
-//        _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) );
-//    }
-//    // move backward
-//    if( _keys[GLFW_KEY_S] || _keys[GLFW_KEY_DOWN] ) {
-//        _pArcballCam->rotate(0.0f, -_cameraSpeed.y);
-//    }
+    if(_keys[GLFW_KEY_W]) {
+        heroPosition.x += cos(_pHero->getBodyAngle());
+        heroPosition.z += -sin(_pHero->getBodyAngle());
+        _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
+        _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
+        _pArcballCam->recomputeOrientation();
+    }
+
+    if(_keys[GLFW_KEY_S]) {
+        heroPosition.x -= cos(_pHero->getBodyAngle());
+        heroPosition.z -= -sin(_pHero->getBodyAngle());
+        _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
+        _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
+        _pArcballCam->recomputeOrientation();
+    }
+
+    if(_keys[GLFW_KEY_D]) {
+        _pHero->turnRight();
+    }
+
+    if(_keys[GLFW_KEY_A]) {
+        _pHero->turnLeft();
+    }
 }
 
 void A3Engine::run() {

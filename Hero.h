@@ -21,14 +21,7 @@ public:
     /// \param projMtx camera projection matrix to apply to plane
     /// \note internally uses the provided shader program and sets the necessary uniforms
     /// for the MVP and Normal Matrices as well as the material diffuse color
-    void drawPlane( glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx );
-
     void drawHero( glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx );
-
-    /// \desc simulates the plane flying forward by rotating the propeller clockwise
-    void flyForward();
-    /// \desc simulates the plane flying backward by rotating the propeller counter-clockwise
-    void flyBackward();
 
     GLfloat getBodyAngle() const { return _bodyAngle; }
 
@@ -36,11 +29,6 @@ public:
     void turnLeft();
 
 private:
-    /// \desc current angle of rotation for the propeller
-    GLfloat _propAngle;
-    /// \desc one rotation step
-    GLfloat _propAngleRotationSpeed;
-
     /// \desc handle of the shader program to use when drawing the plane
     GLuint _shaderProgramHandle;
     /// \desc stores the uniform locations needed for the plan information
@@ -52,9 +40,6 @@ private:
         /// \desc location of the material diffuse color
         GLint materialColor;
     } _shaderProgramUniformLocations;
-
-    /// \desc angle to rotate our plane at
-    GLfloat _rotatePlaneAngle;
 
     glm::vec3 _transWholeBody;
     glm::vec3 _scaleWholeBody;
@@ -77,37 +62,18 @@ private:
     glm::vec3 _scaleLegs;
     glm::vec3 _transLegs;
 
-    /// \desc color the plane's body
+    /// \desc color the hero's body
     glm::vec3 _colorBody;
-    /// \desc amount to scale the plane's body by
+    /// \desc amount to scale the hero's body by
     glm::vec3 _scaleBody;
     glm::vec3 _transBody;
 
-    /// \desc color the plane's wing
+    /// \desc color the hero's arm
     glm::vec3 _colorArm;
-    /// \desc amount to scale the plane's wing by
+    /// \desc amount to scale the hero's by
     glm::vec3 _scaleArm;
-    /// \desc amount to rotate the plane's wing by
-    GLfloat _rotateWingAngle;
-
-    /// \desc color the plane's nose
-    glm::vec3 _colorNose;
-    /// \desc amount to rotate the plane's nose by
-    GLfloat _rotateNoseAngle;
-
-    /// \desc color the plane's propeller
-    glm::vec3 _colorProp;
-    /// \desc amount to scale the plane's propeller by
-    glm::vec3 _scaleProp;
-    /// \desc amount to translate the plane's propeller by
-    glm::vec3 _transProp;
-
-    /// \desc color the plane's tail
-    glm::vec3 _colorTail;
 
     const GLfloat _PI = glm::pi<float>();
-    const GLfloat _2PI = glm::two_pi<float>();
-    const GLfloat _PI_OVER_2 = glm::half_pi<float>();
 
     void _drawHeroHead(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
     void _drawHeroLeftEye(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
@@ -115,33 +81,6 @@ private:
     void _drawHeroBody(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
     void _drawHeroLegs(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
     void _drawHeroArm(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
-
-    /// \desc draws just the plane's body
-    /// \param modelMtx existing model matrix to apply to plane
-    /// \param viewMtx camera view matrix to apply to plane
-    /// \param projMtx camera projection matrix to apply to plane
-    void _drawPlaneBody(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
-    /// \desc draws a single wing
-    /// \param isLeftWing true if left wing, false if right wing (controls wing rotation)
-    /// \param modelMtx existing model matrix to apply to plane
-    /// \param viewMtx camera view matrix to apply to plane
-    /// \param projMtx camera projection matrix to apply to plane
-    void _drawPlaneWing(bool isLeftWing, glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
-    /// \desc draws the nose of the plane
-    /// \param modelMtx existing model matrix to apply to plane
-    /// \param viewMtx camera view matrix to apply to plane
-    /// \param projMtx camera projection matrix to apply to plane
-    void _drawPlaneNose(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
-    /// \desc draws the two propeller pieces
-    /// \param modelMtx existing model matrix to apply to plane
-    /// \param viewMtx camera view matrix to apply to plane
-    /// \param projMtx camera projection matrix to apply to plane
-    void _drawPlanePropeller(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
-    /// \desc draws the tail of the plane
-    /// \param modelMtx existing model matrix to apply to plane
-    /// \param viewMtx camera view matrix to apply to plane
-    /// \param projMtx camera projection matrix to apply to plane
-    void _drawPlaneTail(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
 
     /// \desc precomputes the matrix uniforms CPU-side and then sends them
     /// to the GPU to be used in the shader for each vertex.  It is more efficient
