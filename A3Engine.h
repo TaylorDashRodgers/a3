@@ -34,6 +34,8 @@ public:
     /// \desc value off-screen to represent mouse has not begun interacting with window yet
     static constexpr GLfloat MOUSE_UNINITIALIZED = -9999.0f;
 
+    glm::vec3 heroPosition;
+
 private:
     void mSetupGLFW() final;
     void mSetupOpenGL() final;
