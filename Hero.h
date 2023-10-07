@@ -30,6 +30,9 @@ public:
     /// \desc simulates the plane flying backward by rotating the propeller counter-clockwise
     void flyBackward();
 
+    void turnRight();
+    void turnLeft();
+
 private:
     /// \desc current angle of rotation for the propeller
     GLfloat _propAngle;
@@ -53,6 +56,8 @@ private:
 
     glm::vec3 _transWholeBody;
     glm::vec3 _scaleWholeBody;
+    GLfloat _bodyAngle;
+    GLfloat _bodyAngleRotationFactor;
 
     glm::vec3 _colorHead;
     glm::vec3 _scaleHead;

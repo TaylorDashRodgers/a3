@@ -58,6 +58,11 @@ void A3Engine::handleKeyEvent(GLint key, GLint action) {
                 _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
                 _pArcballCam->recomputeOrientation();
                 break;
+            case GLFW_KEY_D:
+                _pHero->turnRight();
+                break;
+            case GLFW_KEY_A:
+                _pHero->turnLeft();
 
             default: break; // suppress CLion warning
         }
@@ -331,11 +336,11 @@ void A3Engine::_updateScene() {
 //    }
 //    // turn right
 //    if( _keys[GLFW_KEY_D] || _keys[GLFW_KEY_RIGHT] ) {
-//        _pArcballCam->rotate(_cameraSpeed.y, 0.0f);
+//        _pHero->turnRight();
 //    }
 //    // turn left
 //    if( _keys[GLFW_KEY_A] || _keys[GLFW_KEY_LEFT] ) {
-//        _pArcballCam->rotate(-_cameraSpeed.y, 0.0f);
+//        _pHero->turnLeft();
 //    }
 //    // move forward
 //    if( _keys[GLFW_KEY_W] || _keys[GLFW_KEY_UP] ) {
