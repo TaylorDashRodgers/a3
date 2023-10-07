@@ -1,6 +1,7 @@
 #include "A3Engine.h"
 
 #include <CSCI441/objects.hpp>
+#include <iostream>
 
 //*************************************************************************************
 //
@@ -27,6 +28,9 @@ A3Engine::A3Engine()
     for(auto& _key : _keys) _key = GL_FALSE;
 
     heroPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+    _yOffset = 0.1;
+    _timeVariable = 0.0;
+    _hoverAmount = 0.0;
     _mousePosition = glm::vec2(MOUSE_UNINITIALIZED, MOUSE_UNINITIALIZED );
     _leftMouseButtonState = GLFW_RELEASE;
 }
@@ -306,6 +310,31 @@ void A3Engine::_updateScene() {
         _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
         _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
         _pArcballCam->recomputeOrientation();
+
+        if(heroPosition.x > 550.0f) {
+            heroPosition.x = 550.0f;
+            _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
+            _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
+            _pArcballCam->recomputeOrientation();
+        }
+        if(heroPosition.x < -550.0f) {
+            heroPosition.x = -550.0f;
+            _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
+            _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
+            _pArcballCam->recomputeOrientation();
+        }
+        if(heroPosition.z > 550.0f) {
+            heroPosition.z = 550.0f;
+            _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
+            _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
+            _pArcballCam->recomputeOrientation();
+        }
+        if(heroPosition.z < -550.0f) {
+            heroPosition.z = -550.0f;
+            _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
+            _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
+            _pArcballCam->recomputeOrientation();
+        }
     }
 
     if(_keys[GLFW_KEY_S]) {
@@ -314,6 +343,31 @@ void A3Engine::_updateScene() {
         _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
         _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
         _pArcballCam->recomputeOrientation();
+
+        if(heroPosition.x > 550.0f) {
+            heroPosition.x = 550.0f;
+            _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
+            _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
+            _pArcballCam->recomputeOrientation();
+        }
+        if(heroPosition.x < -550.0f) {
+            heroPosition.x = -550.0f;
+            _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
+            _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
+            _pArcballCam->recomputeOrientation();
+        }
+        if(heroPosition.z > 550.0f) {
+            heroPosition.z = 550.0f;
+            _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
+            _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
+            _pArcballCam->recomputeOrientation();
+        }
+        if(heroPosition.z < -550.0f) {
+            heroPosition.z = -550.0f;
+            _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
+            _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
+            _pArcballCam->recomputeOrientation();
+        }
     }
 
     if(_keys[GLFW_KEY_D]) {
@@ -323,6 +377,13 @@ void A3Engine::_updateScene() {
     if(_keys[GLFW_KEY_A]) {
         _pHero->turnLeft();
     }
+
+    _hoverAmount = _yOffset * std::sin(M_PI/180 * _timeVariable);
+    heroPosition.y += _hoverAmount;
+    _timeVariable += 1;
+    _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) * 0.1f );
+    _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
+    _pArcballCam->recomputeOrientation();
 }
 
 void A3Engine::run() {

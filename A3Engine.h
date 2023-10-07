@@ -37,6 +37,10 @@ public:
     glm::vec3 heroPosition;
 
 private:
+    GLfloat _yOffset;
+    GLfloat _timeVariable;
+    GLfloat _hoverAmount;
+
     void mSetupGLFW() final;
     void mSetupOpenGL() final;
     void mSetupShaders() final;
