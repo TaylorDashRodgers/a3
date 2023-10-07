@@ -63,7 +63,7 @@ private:
     GLint _leftMouseButtonState;
 
     /// \desc the static fixed camera in our world
-    CSCI441::FreeCam* _pFreeCam;
+    CSCI441::ArcballCam* _pArcballCam;
     /// \desc pair of values to store the speed the camera can move/rotate.
     /// \brief x = forward/backward delta, y = rotational delta
     glm::vec2 _cameraSpeed;

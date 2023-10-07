@@ -1,6 +1,7 @@
 #include "A3Engine.h"
 
 #include <CSCI441/objects.hpp>
+#include <iostream>
 
 //*************************************************************************************
 //
@@ -31,7 +32,7 @@ A3Engine::A3Engine()
 }
 
 A3Engine::~A3Engine() {
-    delete _pFreeCam;
+    delete _pArcballCam;
 }
 
 void A3Engine::handleKeyEvent(GLint key, GLint action) {
@@ -65,10 +66,21 @@ void A3Engine::handleCursorPositionEvent(glm::vec2 currMousePosition) {
         _mousePosition = currMousePosition;
     }
 
+    if(_leftMouseButtonState == GLFW_PRESS && _keys[GLFW_KEY_LEFT_SHIFT] || _keys[GLFW_KEY_RIGHT_SHIFT] ) {
+        std::cout << currMousePosition.x << std::endl;
+        if(currMousePosition.y > _mousePosition.y) {
+            _pArcballCam->moveForward(_cameraSpeed.x);
+//            _pPlane->flyBackward();
+        }
+        if(currMousePosition.y < _mousePosition.y) {
+            _pArcballCam->moveBackward(_cameraSpeed.x);
+        }
+    }
+
     // if the left mouse button is being held down while the mouse is moving
     if(_leftMouseButtonState == GLFW_PRESS) {
         // rotate the camera by the distance the mouse moved
-        _pFreeCam->rotate((currMousePosition.x - _mousePosition.x) * 0.005f,
+        _pArcballCam->rotate((currMousePosition.x - _mousePosition.x) * 0.005f,
                          (_mousePosition.y - currMousePosition.y) * 0.005f );
     }
 
@@ -213,11 +225,12 @@ void A3Engine::_generateEnvironment() {
 }
 
 void A3Engine::mSetupScene() {
-    _pFreeCam = new CSCI441::FreeCam();
-    _pFreeCam->setPosition(glm::vec3(60.0f, 40.0f, 30.0f) );
-    _pFreeCam->setTheta(-M_PI / 3.0f );
-    _pFreeCam->setPhi(M_PI / 2.8f );
-    _pFreeCam->recomputeOrientation();
+    _pArcballCam = new CSCI441::ArcballCam();
+    _pArcballCam->setRadius(15.0f);
+    _pArcballCam->setPosition(glm::vec3(60.0f, 40.0f, 30.0f) );
+    _pArcballCam->setTheta(-M_PI / 7.0f );
+    _pArcballCam->setPhi(M_PI / 1.2f );
+    _pArcballCam->recomputeOrientation();
     _cameraSpeed = glm::vec2(0.25f, 0.02f);
 
     // TODO #6: set lighting uniforms
@@ -281,46 +294,46 @@ void A3Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     //// BEGIN DRAWING THE PLANE ////
     glm::mat4 modelMtx(1.0f);
     // we are going to cheat and use our look at point to place our plane so that it is always in view
-    modelMtx = glm::translate(modelMtx, _pFreeCam->getLookAtPoint() );
-    // rotate the plane with our camera theta direction (we need to rotate the opposite direction so that we always look at the back)
-    modelMtx = glm::rotate(modelMtx, -_pFreeCam->getTheta(), CSCI441::Y_AXIS );
-    // rotate the plane with our camera phi direction
-    modelMtx = glm::rotate(modelMtx, _pFreeCam->getPhi(), CSCI441::X_AXIS );
+//    modelMtx = glm::translate(modelMtx, _pArcballCam->getLookAtPoint() );
+//    // rotate the plane with our camera theta direction (we need to rotate the opposite direction so that we always look at the back)
+//    modelMtx = glm::rotate(modelMtx, -_pArcballCam->getTheta(), CSCI441::Y_AXIS );
+//    // rotate the plane with our camera phi direction
+//    modelMtx = glm::rotate(modelMtx, _pArcballCam->getPhi(), CSCI441::X_AXIS );
     // draw our plane now
     _pPlane->drawHero(modelMtx, viewMtx, projMtx );
     //// END DRAWING THE PLANE ////
 }
 
 void A3Engine::_updateScene() {
-    // fly
-    if( _keys[GLFW_KEY_SPACE] ) {
-        // go backward if shift held down
-        if( _keys[GLFW_KEY_LEFT_SHIFT] || _keys[GLFW_KEY_RIGHT_SHIFT] ) {
-            _pFreeCam->moveBackward(_cameraSpeed.x);
-            _pPlane->flyBackward();
-        }
-        // go forward
-        else {
-            _pFreeCam->moveForward(_cameraSpeed.x);
-            _pPlane->flyForward();
-        }
-    }
-    // turn right
-    if( _keys[GLFW_KEY_D] || _keys[GLFW_KEY_RIGHT] ) {
-        _pFreeCam->rotate(_cameraSpeed.y, 0.0f);
-    }
-    // turn left
-    if( _keys[GLFW_KEY_A] || _keys[GLFW_KEY_LEFT] ) {
-        _pFreeCam->rotate(-_cameraSpeed.y, 0.0f);
-    }
-    // pitch up
-    if( _keys[GLFW_KEY_W] || _keys[GLFW_KEY_UP] ) {
-        _pFreeCam->rotate(0.0f, _cameraSpeed.y);
-    }
-    // pitch down
-    if( _keys[GLFW_KEY_S] || _keys[GLFW_KEY_DOWN] ) {
-        _pFreeCam->rotate(0.0f, -_cameraSpeed.y);
-    }
+//    // fly
+//    if( _keys[GLFW_KEY_SPACE] ) {
+//        // go backward if shift held down
+//        if( _keys[GLFW_KEY_LEFT_SHIFT] || _keys[GLFW_KEY_RIGHT_SHIFT] ) {
+//            _pArcballCam->moveBackward(_cameraSpeed.x);
+//            _pPlane->flyBackward();
+//        }
+//        // go forward
+//        else {
+//            _pArcballCam->moveForward(_cameraSpeed.x);
+//            _pPlane->flyForward();
+//        }
+//    }
+//    // turn right
+//    if( _keys[GLFW_KEY_D] || _keys[GLFW_KEY_RIGHT] ) {
+//        _pArcballCam->rotate(_cameraSpeed.y, 0.0f);
+//    }
+//    // turn left
+//    if( _keys[GLFW_KEY_A] || _keys[GLFW_KEY_LEFT] ) {
+//        _pArcballCam->rotate(-_cameraSpeed.y, 0.0f);
+//    }
+//    // pitch up
+//    if( _keys[GLFW_KEY_W] || _keys[GLFW_KEY_UP] ) {
+//        _pArcballCam->rotate(0.0f, _cameraSpeed.y);
+//    }
+//    // pitch down
+//    if( _keys[GLFW_KEY_S] || _keys[GLFW_KEY_DOWN] ) {
+//        _pArcballCam->rotate(0.0f, -_cameraSpeed.y);
+//    }
 }
 
 void A3Engine::run() {
@@ -341,7 +354,7 @@ void A3Engine::run() {
         glViewport( 0, 0, framebufferWidth, framebufferHeight );
 
         // draw everything to the window
-        _renderScene(_pFreeCam->getViewMatrix(), _pFreeCam->getProjectionMatrix());
+        _renderScene(_pArcballCam->getViewMatrix(), _pArcballCam->getProjectionMatrix());
 
         _updateScene();
 

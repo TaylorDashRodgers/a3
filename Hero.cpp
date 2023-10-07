@@ -16,6 +16,8 @@ Hero::Hero(GLuint shaderProgramHandle, GLint mvpMtxUniformLocation, GLint normal
 
     _rotatePlaneAngle = _PI / 2.0f;
 
+    _scaleWholeBody = glm::vec3( 10.0f, 10.0f, 10.0f);
+
     _colorHead = glm::vec3( 0.0f,0.5451f,0.5451f );
     _scaleHead = glm::vec3( 0.1f, 0.1f, 0.1f );
     _transHead = glm::vec3( 0.0f, 0.13f, 0.0f );
@@ -65,6 +67,7 @@ void Hero::drawPlane(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) 
 void Hero::drawHero(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) {
     modelMtx = glm::rotate( modelMtx, -_rotatePlaneAngle, CSCI441::Y_AXIS );
     modelMtx = glm::rotate( modelMtx, _rotatePlaneAngle, CSCI441::Z_AXIS );
+    modelMtx = glm::scale( modelMtx, _scaleWholeBody );
     _drawHeroBody(modelMtx, viewMtx, projMtx);
     _drawHeroArm(modelMtx, viewMtx, projMtx);
     _drawHeroLegs(modelMtx, viewMtx, projMtx);

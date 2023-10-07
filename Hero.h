@@ -51,6 +51,8 @@ private:
     /// \desc angle to rotate our plane at
     GLfloat _rotatePlaneAngle;
 
+    glm::vec3 _scaleWholeBody;
+
     glm::vec3 _colorHead;
     glm::vec3 _scaleHead;
     glm::vec3 _transHead;
