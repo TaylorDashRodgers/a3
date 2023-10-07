@@ -20,6 +20,14 @@ Hero::Hero(GLuint shaderProgramHandle, GLint mvpMtxUniformLocation, GLint normal
     _scaleHead = glm::vec3( 0.1f, 0.1f, 0.1f );
     _transHead = glm::vec3( 0.0f, 0.13f, 0.0f );
 
+    _colorLeftEye = glm::vec3( 1.0f,1.0f,1.0f );
+    _scaleLeftEye = glm::vec3( 0.1f, 0.1f, 0.1f );
+    _transLeftEye = glm::vec3( 0.06f, 0.15f, 0.03f );
+
+    _colorRightEye = glm::vec3( 1.0f,1.0f,1.0f );
+    _scaleRightEye = glm::vec3( 0.1f, 0.1f, 0.1f );
+    _transRightEye = glm::vec3( 0.06f, 0.15f, -0.03f );
+
     _colorBody = glm::vec3( 0.0f,0.5451f,0.5451f );
     _scaleBody = glm::vec3( 1.0f, 2.5f, 1.0f );
     _transBody = glm::vec3( 0.0f, -0.04f, 0.0f );
@@ -61,6 +69,8 @@ void Hero::drawHero(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) {
     _drawHeroArm(modelMtx, viewMtx, projMtx);
     _drawHeroLegs(modelMtx, viewMtx, projMtx);
     _drawHeroHead(modelMtx, viewMtx, projMtx);
+    _drawHeroLeftEye(modelMtx, viewMtx, projMtx);
+    _drawHeroRightEye(modelMtx, viewMtx, projMtx);
 }
 
 void Hero::flyForward() {
@@ -82,6 +92,28 @@ void Hero::_drawHeroHead(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMt
     glProgramUniform3fv(_shaderProgramHandle, _shaderProgramUniformLocations.materialColor, 1, &_colorHead[0]);
 
     CSCI441::drawSolidSphere( 0.8f, 10, 10);
+}
+
+void Hero::_drawHeroLeftEye(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
+    glm::mat4 modelMtx1 = glm::translate( modelMtx, _transLeftEye );
+    modelMtx1 = glm::scale( modelMtx1, _scaleLeftEye );
+
+    _computeAndSendMatrixUniforms(modelMtx1, viewMtx, projMtx);
+
+    glProgramUniform3fv(_shaderProgramHandle, _shaderProgramUniformLocations.materialColor, 1, &_colorLeftEye[0]);
+
+    CSCI441::drawSolidSphere( 0.2f, 10, 10);
+}
+
+void Hero::_drawHeroRightEye(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
+    glm::mat4 modelMtx1 = glm::translate( modelMtx, _transRightEye );
+    modelMtx1 = glm::scale( modelMtx1, _scaleRightEye );
+
+    _computeAndSendMatrixUniforms(modelMtx1, viewMtx, projMtx);
+
+    glProgramUniform3fv(_shaderProgramHandle, _shaderProgramUniformLocations.materialColor, 1, &_colorRightEye[0]);
+
+    CSCI441::drawSolidSphere( 0.2f, 10, 10);
 }
 
 void Hero::_drawHeroBody(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {

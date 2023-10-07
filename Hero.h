@@ -55,6 +55,14 @@ private:
     glm::vec3 _scaleHead;
     glm::vec3 _transHead;
 
+    glm::vec3 _colorLeftEye;
+    glm::vec3 _scaleLeftEye;
+    glm::vec3 _transLeftEye;
+
+    glm::vec3 _colorRightEye;
+    glm::vec3 _scaleRightEye;
+    glm::vec3 _transRightEye;
+
     glm::vec3 _colorLegs;
     glm::vec3 _scaleLegs;
     glm::vec3 _transLegs;
@@ -92,6 +100,8 @@ private:
     const GLfloat _PI_OVER_2 = glm::half_pi<float>();
 
     void _drawHeroHead(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
+    void _drawHeroLeftEye(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
+    void _drawHeroRightEye(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
     void _drawHeroBody(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
     void _drawHeroLegs(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
     void _drawHeroArm(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
