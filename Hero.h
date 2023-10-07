@@ -30,6 +30,8 @@ public:
     /// \desc simulates the plane flying backward by rotating the propeller counter-clockwise
     void flyBackward();
 
+    GLfloat getBodyAngle() const { return _bodyAngle; }
+
     void turnRight();
     void turnLeft();
 

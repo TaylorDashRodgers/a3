@@ -47,13 +47,15 @@ void A3Engine::handleKeyEvent(GLint key, GLint action) {
                 setWindowShouldClose();
                 break;
             case GLFW_KEY_W:
-                heroPosition.x += 0.5f;
+                heroPosition.x += cos(_pHero->getBodyAngle());
+                heroPosition.z += -sin(_pHero->getBodyAngle());
                 _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) );
                 _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
                 _pArcballCam->recomputeOrientation();
                 break;
             case GLFW_KEY_S:
-                heroPosition.x -= 0.5f;
+                heroPosition.x -= cos(_pHero->getBodyAngle());
+                heroPosition.z -= -sin(_pHero->getBodyAngle());
                 _pArcballCam->setPosition(glm::vec3(heroPosition.x, heroPosition.y, heroPosition.z) );
                 _pArcballCam->setLookAtPoint(_pArcballCam->getPosition());
                 _pArcballCam->recomputeOrientation();

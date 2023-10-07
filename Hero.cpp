@@ -19,7 +19,7 @@ Hero::Hero(GLuint shaderProgramHandle, GLint mvpMtxUniformLocation, GLint normal
     _transWholeBody = glm::vec3( 0.0f, 2.2f, 0.0f);
     _scaleWholeBody = glm::vec3( 10.0f, 10.0f, 10.0f);
     _bodyAngle = 0.0f;
-    _bodyAngleRotationFactor = 6.0f;
+    _bodyAngleRotationFactor = _PI / 32;
 
     _colorHead = glm::vec3( 0.0f,0.5451f,0.5451f );
     _scaleHead = glm::vec3( 0.1f, 0.1f, 0.1f );
@@ -68,9 +68,10 @@ Hero::Hero(GLuint shaderProgramHandle, GLint mvpMtxUniformLocation, GLint normal
 //}
 
 void Hero::drawHero(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) {
-    modelMtx = glm::rotate( modelMtx, _bodyAngle, CSCI441::Y_AXIS );
-//    modelMtx = glm::rotate( modelMtx, _rotatePlaneAngle, CSCI441::Z_AXIS );
     glm::mat4 modelMtx1 = glm::translate( modelMtx, _transWholeBody );
+    modelMtx1 = glm::rotate( modelMtx1, _bodyAngle, CSCI441::Y_AXIS );
+//    modelMtx = glm::rotate( modelMtx, _rotatePlaneAngle, CSCI441::Z_AXIS );
+//    glm::mat4 modelMtx1 = glm::translate( modelMtx, _transWholeBody );
     modelMtx1 = glm::scale( modelMtx1, _scaleWholeBody );
     _drawHeroBody(modelMtx1, viewMtx, projMtx);
     _drawHeroArm(modelMtx1, viewMtx, projMtx);
@@ -91,11 +92,11 @@ void Hero::drawHero(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) {
 //}
 
 void Hero::turnRight() {
-    _bodyAngle += _bodyAngleRotationFactor;
+    _bodyAngle -= _bodyAngleRotationFactor;
 }
 
 void Hero::turnLeft() {
-    _bodyAngle -= _bodyAngleRotationFactor;
+    _bodyAngle += _bodyAngleRotationFactor;
 }
 
 void Hero::_drawHeroHead(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
