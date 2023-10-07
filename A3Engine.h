@@ -69,7 +69,7 @@ private:
     glm::vec2 _cameraSpeed;
 
     /// \desc our plane model
-    Hero* _pPlane;
+    Hero* _pHero;
 
     /// \desc the size of the world (controls the ground size and locations of buildings)
     static constexpr GLfloat WORLD_SIZE = 55.0f;

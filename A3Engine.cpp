@@ -1,7 +1,6 @@
 #include "A3Engine.h"
 
 #include <CSCI441/objects.hpp>
-#include <iostream>
 
 //*************************************************************************************
 //
@@ -67,10 +66,8 @@ void A3Engine::handleCursorPositionEvent(glm::vec2 currMousePosition) {
     }
 
     if(_leftMouseButtonState == GLFW_PRESS && _keys[GLFW_KEY_LEFT_SHIFT] || _keys[GLFW_KEY_RIGHT_SHIFT] ) {
-        std::cout << currMousePosition.x << std::endl;
         if(currMousePosition.y > _mousePosition.y) {
             _pArcballCam->moveForward(_cameraSpeed.x);
-//            _pPlane->flyBackward();
         }
         if(currMousePosition.y < _mousePosition.y) {
             _pArcballCam->moveBackward(_cameraSpeed.x);
@@ -131,10 +128,10 @@ void A3Engine::mSetupBuffers() {
     CSCI441::setVertexAttributeLocations( _lightingShaderAttributeLocations.vPos, _lightingShaderAttributeLocations.vertexNormal );
 
     // TODO #5: give the plane the normal matrix location
-    _pPlane = new Hero(_lightingShaderProgram->getShaderProgramHandle(),
-                       _lightingShaderUniformLocations.mvpMatrix,
-                       _lightingShaderUniformLocations.normalMatrix,
-                       _lightingShaderUniformLocations.materialColor);
+    _pHero = new Hero(_lightingShaderProgram->getShaderProgramHandle(),
+                      _lightingShaderUniformLocations.mvpMatrix,
+                      _lightingShaderUniformLocations.normalMatrix,
+                      _lightingShaderUniformLocations.materialColor);
 
     _createGroundBuffers();
     _generateEnvironment();
@@ -199,12 +196,12 @@ void A3Engine::_generateEnvironment() {
     for(int i = LEFT_END_POINT; i < RIGHT_END_POINT; i += GRID_SPACING_WIDTH) {
         for(int j = BOTTOM_END_POINT; j < TOP_END_POINT; j += GRID_SPACING_LENGTH) {
             // don't just draw a building ANYWHERE.
-            if( i % 2 && j % 2 && getRand() < 0.4f ) {
+            if( i % 2 && j % 2 ) {
                 // translate to spot
                 glm::mat4 transToSpotMtx = glm::translate( glm::mat4(1.0), glm::vec3(i, 0.0f, j) );
 
-                // compute random height
-                GLdouble height = 2.0f;
+                // compute height
+                GLdouble height = 0.3f;
                 // scale to building size
                 glm::mat4 scaleToHeightMtx = glm::scale( glm::mat4(1.0), glm::vec3(1, height, 1) );
 
@@ -214,7 +211,7 @@ void A3Engine::_generateEnvironment() {
                 // compute full model matrix
                 glm::mat4 modelMatrix = transToHeight * scaleToHeightMtx * transToSpotMtx;
 
-                // compute random color
+                // compute color
                 glm::vec3 color( 0.4f, 0.4f, 0.4f );
                 // store building properties
                 BuildingData currentBuilding = {modelMatrix, color};
@@ -258,7 +255,7 @@ void A3Engine::mCleanupBuffers() {
     CSCI441::deleteObjectVBOs();
 
     fprintf( stdout, "[INFO]: ...deleting models..\n" );
-    delete _pPlane;
+    delete _pHero;
 }
 
 //*************************************************************************************
@@ -294,13 +291,13 @@ void A3Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     //// BEGIN DRAWING THE PLANE ////
     glm::mat4 modelMtx(1.0f);
     // we are going to cheat and use our look at point to place our plane so that it is always in view
-//    modelMtx = glm::translate(modelMtx, _pArcballCam->getLookAtPoint() );
+    modelMtx = glm::translate(modelMtx, _pArcballCam->getLookAtPoint() );
 //    // rotate the plane with our camera theta direction (we need to rotate the opposite direction so that we always look at the back)
 //    modelMtx = glm::rotate(modelMtx, -_pArcballCam->getTheta(), CSCI441::Y_AXIS );
 //    // rotate the plane with our camera phi direction
 //    modelMtx = glm::rotate(modelMtx, _pArcballCam->getPhi(), CSCI441::X_AXIS );
     // draw our plane now
-    _pPlane->drawHero(modelMtx, viewMtx, projMtx );
+    _pHero->drawHero(modelMtx, viewMtx, projMtx );
     //// END DRAWING THE PLANE ////
 }
 
@@ -310,12 +307,12 @@ void A3Engine::_updateScene() {
 //        // go backward if shift held down
 //        if( _keys[GLFW_KEY_LEFT_SHIFT] || _keys[GLFW_KEY_RIGHT_SHIFT] ) {
 //            _pArcballCam->moveBackward(_cameraSpeed.x);
-//            _pPlane->flyBackward();
+//            _pHero->flyBackward();
 //        }
 //        // go forward
 //        else {
 //            _pArcballCam->moveForward(_cameraSpeed.x);
-//            _pPlane->flyForward();
+//            _pHero->flyForward();
 //        }
 //    }
 //    // turn right

@@ -16,6 +16,7 @@ Hero::Hero(GLuint shaderProgramHandle, GLint mvpMtxUniformLocation, GLint normal
 
     _rotatePlaneAngle = _PI / 2.0f;
 
+    _transWholeBody = glm::vec3( 0.0f, 2.2f, 0.0f);
     _scaleWholeBody = glm::vec3( 10.0f, 10.0f, 10.0f);
 
     _colorHead = glm::vec3( 0.0f,0.5451f,0.5451f );
@@ -53,38 +54,39 @@ Hero::Hero(GLuint shaderProgramHandle, GLint mvpMtxUniformLocation, GLint normal
     _colorTail = glm::vec3( 0.0f,0.5451f,0.5451f );
 }
 
-void Hero::drawPlane(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) {
-    modelMtx = glm::rotate( modelMtx, -_rotatePlaneAngle, CSCI441::Y_AXIS );
-    modelMtx = glm::rotate( modelMtx, _rotatePlaneAngle, CSCI441::Z_AXIS );
-    _drawHeroBody(modelMtx, viewMtx, projMtx);
-//    _drawHeroArm(true, modelMtx, viewMtx, projMtx); // the left arm
-//    _drawHeroArm(false, modelMtx, viewMtx, projMtx); // the right arm
-    _drawPlaneNose(modelMtx, viewMtx, projMtx);        // the nose
-    _drawPlanePropeller(modelMtx, viewMtx, projMtx);   // the propeller
-    _drawPlaneTail(modelMtx, viewMtx, projMtx);        // the tail
-}
+//void Hero::drawPlane(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) {
+//    modelMtx = glm::rotate( modelMtx, -_rotatePlaneAngle, CSCI441::Y_AXIS );
+//    modelMtx = glm::rotate( modelMtx, _rotatePlaneAngle, CSCI441::Z_AXIS );
+//    _drawHeroBody(modelMtx, viewMtx, projMtx);
+////    _drawHeroArm(true, modelMtx, viewMtx, projMtx); // the left arm
+////    _drawHeroArm(false, modelMtx, viewMtx, projMtx); // the right arm
+//    _drawPlaneNose(modelMtx, viewMtx, projMtx);        // the nose
+//    _drawPlanePropeller(modelMtx, viewMtx, projMtx);   // the propeller
+//    _drawPlaneTail(modelMtx, viewMtx, projMtx);        // the tail
+//}
 
 void Hero::drawHero(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) {
-    modelMtx = glm::rotate( modelMtx, -_rotatePlaneAngle, CSCI441::Y_AXIS );
-    modelMtx = glm::rotate( modelMtx, _rotatePlaneAngle, CSCI441::Z_AXIS );
-    modelMtx = glm::scale( modelMtx, _scaleWholeBody );
-    _drawHeroBody(modelMtx, viewMtx, projMtx);
-    _drawHeroArm(modelMtx, viewMtx, projMtx);
-    _drawHeroLegs(modelMtx, viewMtx, projMtx);
-    _drawHeroHead(modelMtx, viewMtx, projMtx);
-    _drawHeroLeftEye(modelMtx, viewMtx, projMtx);
-    _drawHeroRightEye(modelMtx, viewMtx, projMtx);
+//    modelMtx = glm::rotate( modelMtx, -_rotatePlaneAngle, CSCI441::Y_AXIS );
+//    modelMtx = glm::rotate( modelMtx, _rotatePlaneAngle, CSCI441::Z_AXIS );
+    glm::mat4 modelMtx1 = glm::translate( modelMtx, _transWholeBody );
+    modelMtx1 = glm::scale( modelMtx1, _scaleWholeBody );
+    _drawHeroBody(modelMtx1, viewMtx, projMtx);
+    _drawHeroArm(modelMtx1, viewMtx, projMtx);
+    _drawHeroLegs(modelMtx1, viewMtx, projMtx);
+    _drawHeroHead(modelMtx1, viewMtx, projMtx);
+    _drawHeroLeftEye(modelMtx1, viewMtx, projMtx);
+    _drawHeroRightEye(modelMtx1, viewMtx, projMtx);
 }
 
-void Hero::flyForward() {
-    _propAngle += _propAngleRotationSpeed;
-    if( _propAngle > _2PI ) _propAngle -= _2PI;
-}
+//void Hero::flyForward() {
+//    _propAngle += _propAngleRotationSpeed;
+//    if( _propAngle > _2PI ) _propAngle -= _2PI;
+//}
 
-void Hero::flyBackward() {
-    _propAngle -= _propAngleRotationSpeed;
-    if( _propAngle < 0.0f ) _propAngle += _2PI;
-}
+//void Hero::flyBackward() {
+//    _propAngle -= _propAngleRotationSpeed;
+//    if( _propAngle < 0.0f ) _propAngle += _2PI;
+//}
 
 void Hero::_drawHeroHead(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
     glm::mat4 modelMtx1 = glm::translate( modelMtx, _transHead );
