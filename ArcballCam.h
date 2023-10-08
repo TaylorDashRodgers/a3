@@ -1,5 +1,6 @@
 //
-// Created by Taylor Rodgers on 10/7/23.
+// Created by Taylor Rodgers on 10/6/23.
+// Used ArcballCam class repository for reference.
 //
 
 #ifndef A3_ARCBALLCAM_H

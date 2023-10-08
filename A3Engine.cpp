@@ -10,11 +10,6 @@
 #define M_PI 3.14159265f
 #endif
 
-/// \desc Simple helper function to return a random number between 0.0f and 1.0f.
-GLfloat getRand() {
-    return (GLfloat)rand() / (GLfloat)RAND_MAX;
-}
-
 //*************************************************************************************
 //
 // Public Interface
@@ -26,6 +21,7 @@ A3Engine::A3Engine()
 
     for(auto& _key : _keys) _key = GL_FALSE;
 
+    // Initialize some values for idle animation and also hero position to keep track of hero.
     heroPosition = glm::vec3(0.0f, 0.0f, 0.0f);
     _yOffset = 0.1;
     _timeVariable = 0.0;
@@ -69,6 +65,7 @@ void A3Engine::handleCursorPositionEvent(glm::vec2 currMousePosition) {
         _mousePosition = currMousePosition;
     }
 
+    // Creates the zoom in and out feature for the ArcballCam.
     if(_leftMouseButtonState == GLFW_PRESS && _keys[GLFW_KEY_LEFT_SHIFT] || _keys[GLFW_KEY_RIGHT_SHIFT] ) {
         if(currMousePosition.y > _mousePosition.y) {
             _pArcballCam->moveForward(_cameraSpeed.x);
@@ -131,7 +128,7 @@ void A3Engine::mSetupBuffers() {
     // TODO #4: need to connect our 3D Object Library to our shader
     CSCI441::setVertexAttributeLocations( _lightingShaderAttributeLocations.vPos, _lightingShaderAttributeLocations.vertexNormal );
 
-    // TODO #5: give the plane the normal matrix location
+    // TODO #5: give the hero the normal matrix location
     _pHero = new Hero(_lightingShaderProgram->getShaderProgramHandle(),
                       _lightingShaderUniformLocations.mvpMatrix,
                       _lightingShaderUniformLocations.normalMatrix,
@@ -199,14 +196,14 @@ void A3Engine::_generateEnvironment() {
     // psych! everything's on a grid.
     for(int i = LEFT_END_POINT; i < RIGHT_END_POINT; i += GRID_SPACING_WIDTH) {
         for(int j = BOTTOM_END_POINT; j < TOP_END_POINT; j += GRID_SPACING_LENGTH) {
-            // don't just draw a building ANYWHERE.
+            // don't just draw a tiles ANYWHERE.
             if( i % 2 && j % 2 ) {
                 // translate to spot
                 glm::mat4 transToSpotMtx = glm::translate( glm::mat4(1.0), glm::vec3(i, 0.0f, j) );
 
                 // compute height
                 GLdouble height = 0.3f;
-                // scale to building size
+                // scale to tile size
                 glm::mat4 scaleToHeightMtx = glm::scale( glm::mat4(1.0), glm::vec3(1, height, 1) );
 
                 // translate up to grid
@@ -217,9 +214,9 @@ void A3Engine::_generateEnvironment() {
 
                 // compute color
                 glm::vec3 color( 0.4f, 0.4f, 0.4f );
-                // store building properties
-                BuildingData currentBuilding = {modelMatrix, color};
-                _tiles.emplace_back(currentBuilding );
+                // store tile properties
+                TileData currentTile = {modelMatrix, color};
+                _tiles.emplace_back(currentTile );
             }
         }
     }
@@ -283,15 +280,15 @@ void A3Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     glDrawElements(GL_TRIANGLE_STRIP, _numGroundPoints, GL_UNSIGNED_SHORT, (void*)0);
     //// END DRAWING THE GROUND PLANE ////
 
-    //// BEGIN DRAWING THE BUILDINGS ////
-    for( const BuildingData& currentBuilding : _tiles ) {
-        _computeAndSendMatrixUniforms(currentBuilding.modelMatrix, viewMtx, projMtx);
+    //// BEGIN DRAWING THE TILES ////
+    for( const TileData& currentTile : _tiles ) {
+        _computeAndSendMatrixUniforms(currentTile.modelMatrix, viewMtx, projMtx);
 
-        _lightingShaderProgram->setProgramUniform(_lightingShaderUniformLocations.materialColor, currentBuilding.color);
+        _lightingShaderProgram->setProgramUniform(_lightingShaderUniformLocations.materialColor, currentTile.color);
 
         CSCI441::drawSolidCube(1.0);
     }
-    //// END DRAWING THE BUILDINGS ////
+    //// END DRAWING THE TILES ////
 
     //// BEGIN DRAWING THE HERO ////
     glm::mat4 modelMtx(1.0f);
@@ -303,6 +300,7 @@ void A3Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
 }
 
 void A3Engine::_updateScene() {
+    // Handle the hero's forward movement and checks for environment boundaries.
     if(_keys[GLFW_KEY_W]) {
         heroPosition.x += cos(_pHero->getBodyAngle());
         heroPosition.z += -sin(_pHero->getBodyAngle());
@@ -336,6 +334,7 @@ void A3Engine::_updateScene() {
         }
     }
 
+    // Handle the hero's backward movement and checks for environment boundaries.
     if(_keys[GLFW_KEY_S]) {
         heroPosition.x -= cos(_pHero->getBodyAngle());
         heroPosition.z -= -sin(_pHero->getBodyAngle());
@@ -369,6 +368,7 @@ void A3Engine::_updateScene() {
         }
     }
 
+    // Rotates the hero's heading left or right.
     if(_keys[GLFW_KEY_D]) {
         _pHero->turnRight();
     }
@@ -377,6 +377,7 @@ void A3Engine::_updateScene() {
         _pHero->turnLeft();
     }
 
+    // Creates our idle movement of hovering up and down.
     _hoverAmount = _yOffset * std::sin(M_PI/180 * _timeVariable);
     heroPosition.y += _hoverAmount;
     _timeVariable += 1;

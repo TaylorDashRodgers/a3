@@ -8,28 +8,30 @@
 
 class Hero {
 public:
-    /// \desc creates a simple plane that gives the appearance of flight
-    /// \param shaderProgramHandle shader program handle that the plane should be drawn using
+    /// \desc creates a simple hero
+    /// \param shaderProgramHandle shader program handle that the hero should be drawn using
     /// \param mvpMtxUniformLocation uniform location for the full precomputed MVP matrix
     /// \param normalMtxUniformLocation uniform location for the precomputed Normal matrix
     /// \param materialColorUniformLocation uniform location for the material diffuse color
     Hero(GLuint shaderProgramHandle, GLint mvpMtxUniformLocation, GLint normalMtxUniformLocation, GLint materialColorUniformLocation );
 
-    /// \desc draws the model plane for a given MVP matrix
-    /// \param modelMtx existing model matrix to apply to plane
-    /// \param viewMtx camera view matrix to apply to plane
-    /// \param projMtx camera projection matrix to apply to plane
+    /// \desc draws the model hero for a given MVP matrix
+    /// \param modelMtx existing model matrix to apply to hero
+    /// \param viewMtx camera view matrix to apply to hero
+    /// \param projMtx camera projection matrix to apply to hero
     /// \note internally uses the provided shader program and sets the necessary uniforms
     /// for the MVP and Normal Matrices as well as the material diffuse color
     void drawHero( glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx );
 
+    // Creates function to get our angle for use of moving forward and backward with heading.
     GLfloat getBodyAngle() const { return _bodyAngle; }
 
+    // Initialize functions for turning right and left.
     void turnRight();
     void turnLeft();
 
 private:
-    /// \desc handle of the shader program to use when drawing the plane
+    /// \desc handle of the shader program to use when drawing the hero
     GLuint _shaderProgramHandle;
     /// \desc stores the uniform locations needed for the plan information
     struct ShaderProgramUniformLocations {
@@ -41,6 +43,7 @@ private:
         GLint materialColor;
     } _shaderProgramUniformLocations;
 
+    // Initialize variables for drawing the hero.
     glm::vec3 _transWholeBody;
     glm::vec3 _scaleWholeBody;
     GLfloat _bodyAngle;
@@ -75,6 +78,7 @@ private:
 
     const GLfloat _PI = glm::pi<float>();
 
+    // Initialize functions used to draw hero parts.
     void _drawHeroHead(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
     void _drawHeroLeftEye(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;
     void _drawHeroRightEye(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const;

@@ -11,6 +11,7 @@ Hero::Hero(GLuint shaderProgramHandle, GLint mvpMtxUniformLocation, GLint normal
     _shaderProgramUniformLocations.normalMtx        = normalMtxUniformLocation;
     _shaderProgramUniformLocations.materialColor    = materialColorUniformLocation;
 
+    // Initializes all of our matrix calculations to draw our hero's body.
     _transWholeBody = glm::vec3( 0.0f, 2.2f, 0.0f);
     _scaleWholeBody = glm::vec3( 10.0f, 10.0f, 10.0f);
     _bodyAngle = 0.0f;
@@ -40,6 +41,7 @@ Hero::Hero(GLuint shaderProgramHandle, GLint mvpMtxUniformLocation, GLint normal
     _scaleArm = glm::vec3(0.5f, 1.0f, 1.0f );
 }
 
+// Main function to put together the hero and draw it as a whole.
 void Hero::drawHero(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) {
     glm::mat4 modelMtx1 = glm::translate( modelMtx, _transWholeBody );
     modelMtx1 = glm::rotate( modelMtx1, _bodyAngle, CSCI441::Y_AXIS );
@@ -52,6 +54,7 @@ void Hero::drawHero(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) {
     _drawHeroRightEye(modelMtx1, viewMtx, projMtx);
 }
 
+// Implements our functions to turn our hero right and left.
 void Hero::turnRight() {
     _bodyAngle -= _bodyAngleRotationFactor;
 }
@@ -60,6 +63,7 @@ void Hero::turnLeft() {
     _bodyAngle += _bodyAngleRotationFactor;
 }
 
+// Creates the function to correctly scale and draw our hero head using a sphere.
 void Hero::_drawHeroHead(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
     glm::mat4 modelMtx1 = glm::translate( modelMtx, _transHead );
     modelMtx1 = glm::scale( modelMtx1, _scaleHead );
@@ -71,6 +75,7 @@ void Hero::_drawHeroHead(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMt
     CSCI441::drawSolidSphere( 0.8f, 10, 10);
 }
 
+// Creates the function to correctly scale and draw our hero eyes left and right using spheres.
 void Hero::_drawHeroLeftEye(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
     glm::mat4 modelMtx1 = glm::translate( modelMtx, _transLeftEye );
     modelMtx1 = glm::scale( modelMtx1, _scaleLeftEye );
@@ -93,6 +98,7 @@ void Hero::_drawHeroRightEye(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 pr
     CSCI441::drawSolidSphere( 0.2f, 10, 10);
 }
 
+// Creates the function to correctly scale and draw our hero's body using a cube.
 void Hero::_drawHeroBody(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
     glm::mat4 modelMtx1 = glm::translate( modelMtx, _transBody );
     modelMtx1 = glm::scale( modelMtx1, _scaleBody );
@@ -104,6 +110,7 @@ void Hero::_drawHeroBody(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMt
     CSCI441::drawSolidCube( 0.1f );
 }
 
+// Creates the function to correctly scale and draw our hero's legs using a cube.
 void Hero::_drawHeroLegs(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
     glm::mat4 modelMtx1 = glm::translate( modelMtx, _transLegs );
     modelMtx1 = glm::scale( modelMtx1, _scaleLegs );
@@ -115,6 +122,7 @@ void Hero::_drawHeroLegs(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMt
     CSCI441::drawSolidCube( 0.1f );
 }
 
+// Creates the function to correctly scale and draw our hero's arms using a cube.
 void Hero::_drawHeroArm(glm::mat4 modelMtx, glm::mat4 viewMtx, glm::mat4 projMtx ) const {
     modelMtx = glm::scale(modelMtx, _scaleArm );
 

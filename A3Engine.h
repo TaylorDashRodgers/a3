@@ -34,9 +34,11 @@ public:
     /// \desc value off-screen to represent mouse has not begun interacting with window yet
     static constexpr GLfloat MOUSE_UNINITIALIZED = -9999.0f;
 
+    // Variable used to keep track of hero's position.
     glm::vec3 heroPosition;
 
 private:
+    // Variables used to create idle motion of hovering.
     GLfloat _yOffset;
     GLfloat _timeVariable;
     GLfloat _hoverAmount;
@@ -74,10 +76,10 @@ private:
     /// \brief x = forward/backward delta, y = rotational delta
     glm::vec2 _cameraSpeed;
 
-    /// \desc our plane model
+    /// \desc our hero model
     Hero* _pHero;
 
-    /// \desc the size of the world (controls the ground size and locations of buildings)
+    /// \desc the size of the world (controls the ground size and locations of tiles)
     static constexpr GLfloat WORLD_SIZE = 55.0f;
     /// \desc VAO for our ground
     GLuint _groundVAO;
@@ -87,17 +89,17 @@ private:
     /// \desc creates the ground VAO
     void _createGroundBuffers();
 
-    /// \desc smart container to store information specific to each building we wish to draw
-    struct BuildingData {
+    /// \desc smart container to store information specific to each tile we wish to draw
+    struct TileData {
         /// \desc transformations to position and size the tiles
         glm::mat4 modelMatrix;
         /// \desc color to draw the tiles
         glm::vec3 color;
     };
     /// \desc information list of all the tiles to draw
-    std::vector<BuildingData> _tiles;
+    std::vector<TileData> _tiles;
 
-    /// \desc generates building information to make up our scene
+    /// \desc generates tiles information to make up our scene
     void _generateEnvironment();
 
     /// \desc shader program that performs lighting
