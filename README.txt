@@ -14,3 +14,5 @@ change what I needed to change from the Lab05 as my source code before really
 getting going.
 - The lab really helped me for this assignment 8.
 - This assignment was super fun and cool, and I would give it a 10.
+
+<img width="638" alt="A3" src="https://github.com/TaylorDashRodgers/a3/assets/74731025/81ab0aef-aa99-48aa-8e7c-36df346fb007">
