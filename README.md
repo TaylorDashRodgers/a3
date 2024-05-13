@@ -1,5 +1,5 @@
-- Taylor Rodgers
-- A3 - The Cabin In The Woods
+# Taylor Rodgers
+# A3 - The Cabin In The Woods
 - This program generates a 3D environment with a ground plan across the XZ plane
 where my hero is draw to and can be moved around and looked at with an ArcballCam.
 - How to run the program is to compile and run the code after updating the CmakeLists
@@ -15,4 +15,4 @@ getting going.
 - The lab really helped me for this assignment 8.
 - This assignment was super fun and cool, and I would give it a 10.
 
-<img width="638" alt="A3" src="https://github.com/TaylorDashRodgers/a3/assets/74731025/81ab0aef-aa99-48aa-8e7c-36df346fb007">
+![HeroImg](https://github.com/TaylorDashRodgers/a3/assets/74731025/81ab0aef-aa99-48aa-8e7c-36df346fb007)
